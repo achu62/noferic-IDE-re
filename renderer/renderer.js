@@ -74,6 +74,9 @@ window.onload = function () {
         bgcolor: "#121314",
         style: "width:200px;\nz-index:5; inset:0;"
     })
+    openfolder.addEventListener("click" , (e)=>{
+        window.ipc.invoke("open-folder")
+    })
     const exit = createButton(document, {
         notappend: true,
         position: "relative",
