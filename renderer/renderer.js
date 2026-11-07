@@ -2,6 +2,7 @@
 import { createMenu } from "./UItoolkit/createmenu.js"
 import { createButton, createDiv } from "./UItoolkit/UIcore/core.js"
 import { contextMenu } from "./UItoolkit/createcontextmenu.js"
+import { recurse } from "./createElementsinFileexplorer.js"
 window.onload = function () {
     const topbar = createMenu(document,
         {
@@ -74,7 +75,7 @@ window.onload = function () {
         bgcolor: "#121314",
         style: "width:200px;\nz-index:5; inset:0;"
     })
-    openfolder.addEventListener("click" , (e)=>{
+    openfolder.addEventListener("click", (e) => {
         window.ipc.invoke("open-folder")
     })
     const exit = createButton(document, {
@@ -108,4 +109,22 @@ window.onload = function () {
             fc = true;
         }
     })
+    const explorer = createDiv(document , {
+        id:"explorer",
+        parent:leftspace
+    })
+    explorer.style.inset = 0;
+    explorer.style.width = `${100}%`
+    explorer.style.height = `${100}%`
+    explorer.style.display = "flex"
+    explorer.style.flexDirection = "row"
+    window.ipc.onDataframeIPC(async (data) => {
+        const message = JSON.parse(data)
+        console.log(message)
+        if (message.action == "open-dir") {
+            const arr = message.content;
+            recurse(arr, explorer, `${10}px`, document)
+        }
+    })
 }
+

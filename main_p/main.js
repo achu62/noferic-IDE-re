@@ -9,6 +9,7 @@ import { options } from "./electron-options.js";
 import { handlePaths } from "./handlePaths.js";
 import { handleWorkspace } from "./folder-handler.js";
 ipcMain.setMaxListeners(0);
+/**@type {import("electron").BrowserWindow} mainWindow */
 let mainWindow;
 
 app.whenReady().then(() => {
@@ -28,3 +29,6 @@ ipcMain.handle("open-folder", async (e) => {
         handleWorkspace(handlePaths(pathname))
     });
 })
+export function getCurrentMainWindow(){
+    return mainWindow;
+}

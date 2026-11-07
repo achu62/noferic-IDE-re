@@ -9,6 +9,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "electron": "^45.2.3"
+    "electron": "^45.2.3",
+    "jsdoc": "^4.0.5"
   }
 }

@@ -15,7 +15,6 @@ export async function scanafolder(folderpath) {
                     id: handlePaths(fullpath),
                     name: file.name,
                     isdirectory: true,
-                    haschildren: children.length > 0,
                     children: children,
                 })
             }
