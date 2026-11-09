@@ -12,6 +12,7 @@
   },
   "keywords": [],
   "dependencies": {
+    "@types/ace": "^0.0.52",
     "ace-builds": "^1.45.2",
     "electron": "^45.2.3",
     "jsdoc": "^4.0.5",

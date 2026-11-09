@@ -20,21 +20,21 @@ ipcMain.handle("open-folder", async (e) => {
     const dirpaths = await dialog.showOpenDialog({
         properties: ['openDirectory']
     })
-    if(dirpaths.canceled || dirpaths.length < 0 ){
+    if (dirpaths.canceled || dirpaths.length < 0) {
         return;
-    } 
+    }
 
     console.log(dirpaths)
     dirpaths.filePaths.forEach(pathname => {
         handleWorkspace(handlePaths(pathname))
     });
 })
-export function getCurrentMainWindow(){
+export function getCurrentMainWindow() {
     return mainWindow;
 }
-ipcMain.handle("get-ext" , (e , spath)=>{
+ipcMain.handle("get-ext", (e, spath) => {
     return path.extname(spath)
 })
-ipcMain.handle("get-name" , (e , spath)=>{
+ipcMain.handle("get-name", (e, spath) => {
     return path.basename(spath)
 })
