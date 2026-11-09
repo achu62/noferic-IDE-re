@@ -13,7 +13,7 @@ export const options = {
         nodeIntegration: false,
         contextIsolation: true,
         allowRunningInsecureContent: true,
-        webSecurity: true,
+        webSecurity: false,
         spellcheck: false,
         devTools: true,
     },

@@ -5,11 +5,16 @@
   "type": "module",
   "main": "./main_p/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "run-pty % node --run frontend % node --run backend",
+    "frontend": "parcel watch index.html",
+    "backend": "node --watch server.js"
   },
   "keywords": [],
   "dependencies": {
+    "ace-builds": "^1.45.2",
     "electron": "^45.2.3",
-    "jsdoc": "^4.0.5"
+    "jsdoc": "^4.0.5",
+    "run-pty": "^6.0.2"
   }
 }

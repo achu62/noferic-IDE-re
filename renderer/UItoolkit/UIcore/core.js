@@ -69,12 +69,14 @@ export function createButton(document, options) {
     if (options.right) {
         element.style.right = options.right;
     }
-    element.addEventListener("mouseenter", () => {
+    element.addEventListener("mouseenter", (e) => {
+        e.stopPropagation()
         element.style.backgroundColor = options.hbgcolor || "#45484D";
     });
 
-    element.addEventListener("mouseleave", () => {
-        element.style.backgroundColor = options.bgcolor || "#2B2D30";
+    element.addEventListener("mouseleave", (e) => {
+        e.stopPropagation()
+        element.style.backgroundColor = options.bgcolor || "#121314";
     });
     if (!options.notappend) {
         if (!parent) {

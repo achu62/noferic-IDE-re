@@ -32,3 +32,9 @@ ipcMain.handle("open-folder", async (e) => {
 export function getCurrentMainWindow(){
     return mainWindow;
 }
+ipcMain.handle("get-ext" , (e , spath)=>{
+    return path.extname(spath)
+})
+ipcMain.handle("get-name" , (e , spath)=>{
+    return path.basename(spath)
+})

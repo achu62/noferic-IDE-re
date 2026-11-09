@@ -3,6 +3,8 @@ import { createMenu } from "./UItoolkit/createmenu.js"
 import { createButton, createDiv } from "./UItoolkit/UIcore/core.js"
 import { contextMenu } from "./UItoolkit/createcontextmenu.js"
 import { recurse } from "./createElementsinFileexplorer.js"
+import { resizeexplorer } from "./resize-explorer.js"
+import {createAceEditor} from "./editor_ace/ace.js"
 window.onload = function () {
     const topbar = createMenu(document,
         {
@@ -57,7 +59,7 @@ window.onload = function () {
         bottom: `${20}px`,
         right: `${0}px`,
         left: `${30}px`,
-        style: "width:100%;\n height:calc(100%-20px); z-index:3;"
+        style: "width:auto; height:auto; z-index:3; background:transparent; padding:0;"
     })
     const leftspace = createDiv(document, {
         id: "leftspace",
@@ -65,7 +67,7 @@ window.onload = function () {
         top: `${0}px`,
         bottom: `${0}px`,
         left: `${0}px`,
-        style: 'border:10px solid #ffffff; \n z-index:4;width:30%'
+        style: 'z-index:4;width:25%'
     })
     const openfolder = createButton(document, {
         notappend: true,
@@ -109,22 +111,38 @@ window.onload = function () {
             fc = true;
         }
     })
-    const explorer = createDiv(document , {
-        id:"explorer",
-        parent:leftspace
+    const explorer = createDiv(document, {
+        id: "explorer",
+        parent: leftspace
     })
-    explorer.style.inset = 0;
-    explorer.style.width = `${100}%`
-    explorer.style.height = `${100}%`
-    explorer.style.display = "flex"
-    explorer.style.flexDirection = "row"
+    explorer.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:flex;flex-direction:column;border:0;padding:0;"
+    const explorerHeading = document.createElement("div");
+    explorerHeading.className = "explorer-heading";
+    explorerHeading.textContent = "EXPLORER";
+    explorer.append(explorerHeading);
+    const explorerTree = document.createElement("div");
+    explorerTree.className = "explorer-tree";
+    explorerTree.innerHTML = '<div class="explorer-empty">Open a folder to view its files.</div>';
+    explorer.append(explorerTree);
+
     window.ipc.onDataframeIPC(async (data) => {
         const message = JSON.parse(data)
-        console.log(message)
         if (message.action == "open-dir") {
             const arr = message.content;
-            recurse(arr, explorer, `${10}px`, document)
+            recurse(arr, explorerTree, 0, document)
         }
     })
+    const right_side = createDiv(document, {
+        id: "middleeditor",
+        parent: workspace,
+        position: "absolute",
+        top: `${0}px`,
+        right: `${0}px`,
+        bottom: `${0}px`,
+
+    })
+    right_side.style.width = `${75}%`
+    resizeexplorer(leftspace)
+    createAceEditor(right_side)
 }
 
