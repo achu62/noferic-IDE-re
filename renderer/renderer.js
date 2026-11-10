@@ -83,6 +83,7 @@ window.onload = function () {
     openfolder.addEventListener("click", (e) => {
         window.ipc.invoke("open-folder")
     })
+    openfolder.click()
     const exit = createButton(document, {
         notappend: true,
         position: "relative",
@@ -172,28 +173,34 @@ window.onload = function () {
 
 export async function openFile(entry) {
     const topmenu = document.getElementById("editor_top_bar")
-    const element = createButton(document, {
-        id: `toptab${entry.id}`,
-        parent: topmenu
-    })
-    element.innerText = entry.name
-    element.style.position = "relative"
-    element.style.top = `${0}px`
-    element.style.left = `${0}px`
-    element.style.bottom = `${0}px`
-    element.style.minWidth = `${10}px`
-    element.style.maxWidth = `${300}px`
-    element.style.padding = "0px 20px 0px 10px"
+    const tabId = `toptab${entry.id}`
+    let element = document.getElementById(tabId)
 
-    element.addEventListener("click", async (e) => {
-        prevElementTop.style.backgroundColor = "#323334";
-        prevElementTop.style.border = "3px solid #0011ff"
-        setModelContentorModel(await window.ipc.invoke("read", entry.id), entry.id, { change_content: false, setModel: true })
-    })
-    element.click()
-    if (prevElementTop) {
-        prevElementTop.style.backgroundColor = "#121314";
-        prevElementTop.style.border = "0px solid #ffffff"
+    if (!element) {
+        element = createButton(document, {
+            id: tabId,
+            parent: topmenu
+        })
+        element.innerText = entry.name
+        element.style.position = "relative"
+        element.style.top = `${0}px`
+        element.style.left = `${0}px`
+        element.style.bottom = `${0}px`
+        element.style.minWidth = `${10}px`
+        element.style.maxWidth = `${300}px`
+        element.style.padding = "0px 20px 0px 10px"
+
+        element.addEventListener("click", async () => {
+            if (prevElementTop && prevElementTop !== element) {
+                prevElementTop.style.backgroundColor = "#121314"
+                prevElementTop.style.border = "0px solid #ffffff"
+            }
+            element.style.backgroundColor = "#323334";
+            element.style.border = "1px solid #0011ff"
+            prevElementTop = element
+            setModelContentorModel(await window.ipc.invoke("read", entry.id), entry.id, { change_content: false, setModel: true })
+        })
     }
-    prevElementTop = element
+
+    element.click()
 }

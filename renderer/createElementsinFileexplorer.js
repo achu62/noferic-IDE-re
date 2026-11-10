@@ -60,7 +60,7 @@ function createEntry(entry, parent, depth, document, selectedPath) {
         const children = document.createElement("div");
         children.className = "tree-children";
         children.setAttribute("role", "group");
-        const expanded = depth === 0;
+        const expanded = false;
         button.setAttribute("aria-expanded", String(expanded));
         children.hidden = !expanded;
         item.append(button, children);

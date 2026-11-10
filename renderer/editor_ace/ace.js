@@ -5,9 +5,8 @@ import './lib/ace-builds/src-min-noconflict/ace.js';
 import './lib/ace-builds/src-min-noconflict/theme-monokai.js';
 import './lib/ace-builds/src-min-noconflict/mode-javascript.js';
 import './lib/ace-builds/src-min-noconflict/mode-html.js'
-
 import './lib/ace-builds/src-min-noconflict/ext-modelist.js';
-
+let imported_list = []
 /**@type {import("ace-builds").Ace.Editor} editor*/
 
 let editor;
@@ -22,13 +21,24 @@ export function resizeEditor() {
     editor.resize(true)
 }
 //options:{change_content:boolean , setModel:boolean}
-export function setModelContentorModel(text, filepath, options) {
+export async function setModelContentorModel(text, filepath, options) {
     console.log(filepath, text, options)
     if (options.setModel) {
         if (editor_map[filepath]) {
             editor.setSession(editor_map[filepath])
         }
         else {
+            try {
+                const modeList = ace.require("ace/ext/modelist").getModeForPath(filepath).name;
+                if (modeList) {
+                    if (imported_list.includes(modeList) == false) {
+                        await import(`./lib/ace-builds/src-min-noconflict/mode-${modeList}.js`)
+                        imported_list.push(modeList)
+                    }
+                }
+
+            }
+            catch (e) { }
             const model = ace.createEditSession(text, ace.require("ace/ext/modelist").getModeForPath(filepath).mode)
             model.setOption("useWorker", false)
             editor_map[filepath] = model;
