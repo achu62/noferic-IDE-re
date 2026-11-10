@@ -4,7 +4,10 @@ import { createButton, createDiv } from "./UItoolkit/UIcore/core.js"
 import { contextMenu } from "./UItoolkit/createcontextmenu.js"
 import { recurse } from "./createElementsinFileexplorer.js"
 import { resizeexplorer } from "./resize-explorer.js"
-import { createAceEditor, CreateModel } from "./editor_ace/ace.js"
+import { createAceEditor } from "./editor_ace/ace.js"
+import { setModelContentorModel } from "./editor_ace/ace.js"
+/**@type {HTMLElement} prevElementTop */
+let prevElementTop;
 window.onload = function () {
     const topbar = createMenu(document,
         {
@@ -160,177 +163,37 @@ window.onload = function () {
         top: `${0}px`,
     })
     topmenu.style.height = `${30}px`
-    topmenu.style.backgroundColor ="#121314"
+    topmenu.style.backgroundColor = "#121314"
 
     resizeexplorer(leftspace)
     createAceEditor(editor_element)
-    CreateModel(`:root {
-    color-scheme: dark;
-    font-family: "Segoe UI", sans-serif;
-    background: #1e1f22;
-    color: #e6e6e6;
+
 }
 
-* {
-    box-sizing: border-box;
-}
+export async function openFile(entry) {
+    const topmenu = document.getElementById("editor_top_bar")
+    const element = createButton(document, {
+        id: `toptab${entry.id}`,
+        parent: topmenu
+    })
+    element.innerText = entry.name
+    element.style.position = "relative"
+    element.style.top = `${0}px`
+    element.style.left = `${0}px`
+    element.style.bottom = `${0}px`
+    element.style.minWidth = `${10}px`
+    element.style.maxWidth = `${300}px`
+    element.style.padding = "0px 20px 0px 10px"
 
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    background: #1e1f22;
+    element.addEventListener("click", async (e) => {
+        prevElementTop.style.backgroundColor = "#323334";
+        prevElementTop.style.border = "3px solid #0011ff"
+        setModelContentorModel(await window.ipc.invoke("read", entry.id), entry.id, { change_content: false, setModel: true })
+    })
+    element.click()
+    if (prevElementTop) {
+        prevElementTop.style.backgroundColor = "#121314";
+        prevElementTop.style.border = "0px solid #ffffff"
+    }
+    prevElementTop = element
 }
-
-button {
-    color: inherit;
-    font: inherit;
-}
-
-#workspace {
-    min-width: 0;
-    min-height: 0;
-}
-
-#leftspace {
-    overflow: hidden;
-    background: #252526;
-    border: 0 !important;
-    border-right: 1px solid #3c3c3c !important;
-    padding: 0 !important;
-}
-
-#explorer {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-    background: #252526;
-    color: #cccccc;
-}
-
-.explorer-heading {
-    flex: 0 0 34px;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    color: #bbbbbb;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-}
-
-.explorer-tree {
-    min-height: 0;
-    flex: 1;
-    overflow: auto;
-    padding: 2px 0 12px;
-    scrollbar-color: #555555 transparent;
-    scrollbar-width: thin;
-}
-
-.tree-item {
-    min-width: 0;
-}
-
-.file-entry {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: calc(100% - 8px);
-    min-width: 0;
-    height: 24px;
-    margin: 0 4px;
-    padding: 0 8px 0 4px;
-    overflow: hidden;
-    border: 0;
-    border-radius: 3px;
-    background: transparent !important;
-    color: #cccccc;
-    text-align: left;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
-
-.file-entry:hover {
-    background: #2a2d2e !important;
-}
-
-.file-entry:focus-visible {
-    outline: 1px solid #8a8a8a;
-    outline-offset: -1px;
-}
-
-.file-entry[aria-selected="true"] {
-    background: #37373d !important;
-    color: #ffffff;
-}
-
-.directory-entry {
-    font-weight: 500;
-}
-
-.tree-disclosure,
-.tree-disclosure-placeholder {
-    display: flex;
-    flex: 0 0 14px;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.tree-disclosure::before {
-    width: 0;
-    height: 0;
-    border-top: 4px solid transparent;
-    border-bottom: 4px solid transparent;
-    border-left: 5px solid #a8a8a8;
-    content: "";
-    transition: transform 100ms ease;
-}
-
-.directory-entry[aria-expanded="true"] .tree-disclosure::before {
-    transform: rotate(90deg);
-}
-
-.file-icon-space {
-    display: flex;
-    flex: 0 0 18px;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.file-icon {
-    display: block;
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-}
-
-.file-entry-label {
-    min-width: 0;
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tree-children[hidden] {
-    display: none;
-}
-
-.explorer-empty {
-    padding: 12px 16px;
-    color: #858585;
-    font-size: 12px;
-}
-` , "home/index.css")
-}
-

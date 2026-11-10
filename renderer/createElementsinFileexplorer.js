@@ -1,7 +1,10 @@
 import { createButton } from "./UItoolkit/UIcore/core.js";
+import { setModelContentorModel } from "./editor_ace/ace.js";
 import { getIconPath } from "./getIconpath.js";
+import { openFile } from "./renderer.js";
 
 const initializedTrees = new WeakSet();
+
 
 function sortedEntries(entries) {
     return [...entries].sort((first, second) => {
@@ -71,7 +74,8 @@ function createEntry(entry, parent, depth, document, selectedPath) {
         });
     } else {
         item.append(button);
-        button.addEventListener("click", () => {
+        button.addEventListener("click", async () => {
+            await openFile(entry)
             parent.closest(".explorer-tree").querySelectorAll(".file-entry[aria-selected='true']").forEach((selected) => {
                 selected.setAttribute("aria-selected", "false");
             });

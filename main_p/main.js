@@ -4,6 +4,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { fileURLToPath } from "url";
 import path from "path"
+import fs from "fs"
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { options } from "./electron-options.js";
 import { handlePaths } from "./handlePaths.js";
@@ -37,4 +38,7 @@ ipcMain.handle("get-ext", (e, spath) => {
 })
 ipcMain.handle("get-name", (e, spath) => {
     return path.basename(spath)
+})
+ipcMain.handle("read", (e, p) => {
+    return fs.readFileSync(p, "utf-8")
 })
